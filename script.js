@@ -67,7 +67,15 @@ $(document).ready(function () {
                 "⏩15:30\n⏪17:00",
                 "⏩17:10\n⏪18:40",
                 "⏩18:50\n⏪20:20"];
-            tableHtml += `<tr><td ${highliter}>№${index + 1} <br>${lecture_time[index]}</br></td><td ${highliter}>${subject}</td><td ${highliter}>${teacher}</td><td ${highliter}>${room}</td></tr>`;
+
+
+            let current_week_type = (Math.ceil( new Date().getDate() / 7) % 2 === 1) ? "В/Н" : "Н/Н"
+
+            if (subject_line[subject_line.length - 1].includes("Н/Н") || subject_line[subject_line.length - 1].includes("В/Н") && subject_line[subject_line.length - 1] !== current_week_type) {
+                tableHtml += `<tr><td>№${index + 1} <br>${lecture_time[index]}</br></td><td></td><td></td><td></td></tr>`;
+            }  else {
+                tableHtml += `<tr><td ${highliter}>№${index + 1} <br>${lecture_time[index]}</br></td><td ${highliter}>${subject}</td><td ${highliter}>${teacher}</td><td ${highliter}>${room}</td></tr>`;
+            }
 
         });
         tableHtml += '</tbody></table>';
@@ -110,10 +118,12 @@ $(document).ready(function () {
             daysOfWeek.forEach(day => {
                 if (data[day]) {
                     let miniTable = '<table class="table table-bordered table-sm mb-0"><tbody>';
+                    let index = 1
                     data[day].forEach(item => {
                         if (item.trim() !== "") {
                             const parts = item.split('\n');
                             miniTable += `<tr>
+                                <td>№${index++}</td>
                                 <td>${parts[0] || ''}</td>
                                 <td>${parts[1] || ''}</td>
                                 <td>${parts[2] || ''}</td>
