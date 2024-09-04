@@ -10,18 +10,65 @@
         .schedule-table {
             margin-bottom: 2rem;
         }
+
         .schedule-table th, .schedule-table td {
             text-align: center;
             vertical-align: top;
         }
+
         .lecture-highlight {
-        background-color: rgba(216, 240, 240, 0.5); /* Легкий зелёный цвет фона для выделенной строки */
+        background-color: rgba(216, 240, 240, 0.5);
         }
+
         .online-highlight {
-        background-color: rgba(223, 240, 216, 0.5); /* Легкий зелёный цвет фона для выделенной строки */
+        background-color: rgba(223, 240, 216, 0.5);
         }
+
+        table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        @media (max-width: 768px) {
+            table {
+                font-size: 12px; /* Уменьшение шрифта на небольших экранах */
+            }
+        }
+
+        @media (max-width: 480px) {
+            table, thead, tbody, th, td, tr {
+                display: block; /* Блочный формат для очень маленьких экранов */
+            }
+
+            tr {
+                margin-bottom: 15px; /* Добавляем отступы между строками */
+            }
+
+            td {
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+            }
+
+            td:before {
+                content: attr(data-label); /* Используем атрибут для заголовков столбцов */
+                position: absolute;
+                left: 10px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                text-align: left;
+                font-weight: bold;
+            }
+        }
+
         body {
-            background-color: #f0f0f0; /* Вы можете заменить #f0f0f0 на любой другой цвет */
+            background-color: #f0f0f0;
         }
     </style>
 </head>
@@ -67,7 +114,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body table-responsive">
                     <!-- Schedule content will be displayed here -->
                     <div id="todaySchedule" class="schedule-table">
                         <!-- Пример расписания. Оно будет заменяться динамически -->
@@ -86,7 +133,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body table-responsive">
                     <!-- Schedule content will be displayed here -->
                     <div id="nextDaySchedule" class="schedule-table">
                         <!-- Пример расписания. Оно будет заменяться динамически -->
@@ -105,7 +152,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body table-responsive">
                     <!-- Schedule content will be displayed here -->
                     <div id="weekSchedule" class="schedule-table">
                         <!-- Пример расписания. Оно будет заменяться динамически -->
@@ -124,7 +171,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body table-responsive">
                     <!-- Schedule content will be displayed here -->
                     <div id="nextWeekSchedule" class="schedule-table">
                         <!-- Пример расписания. Оно будет заменяться динамически -->

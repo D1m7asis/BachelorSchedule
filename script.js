@@ -6,14 +6,13 @@ $(document).ready(function () {
 
     // Загрузка данных из JSON файла
     $.getJSON('schedule.json', function(data) {
-        var select = $('#select-state')[0].selectize;
+        const select = $('#select-state')[0].selectize;
         select.clearOptions(); // Очистить существующие опции
-        select.addOption({ value: '', text: 'Выберите группу' });
         select.addOption({ value: '5', text: '5 подгруппа' });
         select.addOption({ value: '6', text: '6 подгруппа (пока недоступна)' });
 
         // Установить выбранное значение по умолчанию
-        select.setValue('5');
+        select.setValue('5', false);
     });
 
     // Устанавливаем текущую дату и определяем, какая неделя (верхняя или нижняя)
@@ -53,19 +52,23 @@ $(document).ready(function () {
             let teacher = subject_line[1] === undefined ? '&nbsp' : subject_line[1];
             let room = subject_line[2] === undefined ? '&nbsp' : subject_line[2];
 
+            let highliter  = '';
             if (item.toLowerCase().includes('онлайн')) {
-                tableHtml += `<tr><td class="online-highlight">${index + 1}</td>
-                                <td class="online-highlight">${subject}</td>
-                                <td class="online-highlight">${teacher}</td>
-                                <td class="online-highlight">${room}</td></tr>`;
+                highliter = 'class="online-highlight"'
             } else if (item.toLowerCase().includes('лекция')) {
-                tableHtml += `<tr><td class="lecture-highlight">${index + 1}</td>
-                                <td class="lecture-highlight">${subject}</td>
-                                <td class="lecture-highlight">${teacher}</td>
-                                <td class="lecture-highlight">${room}</td></tr>`;
-            } else {
-                tableHtml += `<tr><td>${index + 1}</td><td>${subject}</td><td>${teacher}</td><td>${room}</td></tr>`;
+                highliter = 'class="lecture-highlight"'
             }
+
+            let lecture_time =
+                ["⏩ 8:30&nbsp;\n⏪10:00",
+                "⏩10:10\n⏪11:40",
+                "⏩11:50\n⏪13:20",
+                "⏩13:50\n⏪15:20",
+                "⏩15:30\n⏪17:00",
+                "⏩17:10\n⏪18:40",
+                "⏩18:50\n⏪20:20"];
+            tableHtml += `<tr><td ${highliter}>№${index + 1} <br>${lecture_time[index]}</br></td><td ${highliter}>${subject}</td><td ${highliter}>${teacher}</td><td ${highliter}>${room}</td></tr>`;
+
         });
         tableHtml += '</tbody></table>';
         return tableHtml;
