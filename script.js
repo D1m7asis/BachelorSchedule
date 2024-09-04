@@ -86,7 +86,7 @@ $(document).ready(function () {
     function loadSchedule(modalId, key) {
         $.getJSON('schedule.json', function(data) {
             if (data[key]) {
-                var scheduleHtml = generateScheduleTable(data[key]);
+                const scheduleHtml = generateScheduleTable(data[key]);
                 $(modalId + ' .modal-body').html(scheduleHtml);
             } else {
                 $(modalId + ' .modal-body').html('Расписание не доступно');
