@@ -24,6 +24,10 @@
             background-color: rgba(223, 240, 216, 0.5);
         }
 
+        .today-highlight {
+            background-color: rgba(236, 224, 178, 0.2);
+        }
+
         table td {
             text-align: center;
             vertical-align: middle;
@@ -99,7 +103,7 @@
                 <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#weekModal">Текущая неделя</button>
             </div>
             <div class="col-auto">
-                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#nextWeekModal">Следующая неделя</button>
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#armyModal">Военная подготовка</button>
             </div>
         </div>
     </form>
@@ -162,18 +166,18 @@
         </div>
     </div>
 
-    <div class="modal fade" id="nextWeekModal" tabindex="-1" role="dialog" aria-labelledby="nextWeekModalLabel" aria-hidden="true">
+    <div class="modal fade" id="armyModal" tabindex="-1" role="dialog" aria-labelledby="armyModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="nextWeekModalLabel">Расписание на следующую неделю</h5>
+                    <h5 class="modal-title" id="armyModalLabel">Расписание военной подготовки</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body table-responsive">
                     <!-- Schedule content will be displayed here -->
-                    <div id="nextWeekSchedule" class="schedule-table">
+                    <div id="armySchedule" class="schedule-table">
                         <!-- Пример расписания. Оно будет заменяться динамически -->
                     </div>
                 </div>

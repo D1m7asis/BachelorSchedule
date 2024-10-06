@@ -1,17 +1,24 @@
+const lecture_time = [
+    "⏩ 8:30<br>⏪10:00",
+    "⏩10:10<br>⏪11:40",
+    "⏩11:50<br>⏪13:20",
+    "⏩13:50<br>⏪15:20",
+    "⏩15:30<br>⏪17:00",
+    "⏩17:10<br>⏪18:40",
+    "⏩18:50<br>⏪20:20"
+];
+
 $(document).ready(function () {
-    // Инициализация Selectize
     $('#select-state').selectize({
         sortField: 'text'
     });
 
-    // Загрузка данных из JSON файла
     $.getJSON('schedule.json', function(data) {
         const select = $('#select-state')[0].selectize;
         select.clearOptions(); // Очистить существующие опции
         select.addOption({ value: '5', text: '5 подгруппа' });
         select.addOption({ value: '6', text: '6 подгруппа (пока недоступна)' });
 
-        // Установить выбранное значение по умолчанию
         select.setValue('5', false);
     });
 
@@ -25,25 +32,22 @@ $(document).ready(function () {
     // Форматирование даты в формате "Вторник, 03.09.2024. Верхняя неделя"
     function formatDate(date) {
         const daysOfWeek = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
-        const dayNames = ["Верхняя", "Нижняя"];
+        const weekTypes = ["Верхняя", "Нижняя"];
 
         const day = date.getDate();
-        const month = date.getMonth() + 1; // Месяцы с 0 до 11
+        const month = date.getMonth() + 1;
         const year = date.getFullYear();
         const dayOfWeek = daysOfWeek[date.getDay()];
 
-        // Определение недели (верхняя или нижняя)
         const weekOfMonth = Math.ceil(day / 7);
-        const weekType = (weekOfMonth % 2 === 1) ? dayNames[0] : dayNames[1];
+        const weekType = (weekOfMonth % 2 === 1) ? weekTypes[0] : weekTypes[1];
 
-        // Форматирование даты
-        const formattedDate = `${dayOfWeek}, ${String(day).padStart(2, '0')}.${String(month).padStart(2, '0')}.${year}. ${weekType} неделя`;
-        return formattedDate;
+        return `${dayOfWeek}, ${String(day).padStart(2, '0')}.${String(month).padStart(2, '0')}.${year}. ${weekType} неделя`;
     }
 
     updateDateInfo();
 
-    function generateScheduleTable(scheduleItems) {
+    function generateDailyScheduleTable(scheduleItems) {
         let tableHtml = '<table class="table table-bordered"><thead><tr><th>#</th><th>Предмет</th><th>Препод</th><th>Кабинет</th></tr></thead><tbody>';
         scheduleItems.forEach((item, index) => {
 
@@ -52,29 +56,19 @@ $(document).ready(function () {
             let teacher = subject_line[1] === undefined ? '&nbsp' : subject_line[1];
             let room = subject_line[2] === undefined ? '&nbsp' : subject_line[2];
 
-            let highliter  = '';
+            let highlighter  = '';
             if (item.toLowerCase().includes('онлайн')) {
-                highliter = 'class="online-highlight"'
+                highlighter = 'class="online-highlight"'
             } else if (item.toLowerCase().includes('лекция')) {
-                highliter = 'class="lecture-highlight"'
+                highlighter = 'class="lecture-highlight"'
             }
-
-            let lecture_time =
-                ["⏩ 8:30&nbsp;\n⏪10:00",
-                "⏩10:10\n⏪11:40",
-                "⏩11:50\n⏪13:20",
-                "⏩13:50\n⏪15:20",
-                "⏩15:30\n⏪17:00",
-                "⏩17:10\n⏪18:40",
-                "⏩18:50\n⏪20:20"];
-
 
             let current_week_type = (Math.ceil( new Date().getDate() / 7) % 2 === 1) ? "В/Н" : "Н/Н"
 
             if (subject_line[subject_line.length - 1].includes("Н/Н") || subject_line[subject_line.length - 1].includes("В/Н") && subject_line[subject_line.length - 1] !== current_week_type) {
                 tableHtml += `<tr><td>№${index + 1} <br>${lecture_time[index]}</br></td><td></td><td></td><td></td></tr>`;
             }  else {
-                tableHtml += `<tr><td ${highliter}>№${index + 1} <br>${lecture_time[index]}</br></td><td ${highliter}>${subject}</td><td ${highliter}>${teacher}</td><td ${highliter}>${room}</td></tr>`;
+                tableHtml += `<tr><td ${highlighter}>№${index + 1} <br>${lecture_time[index]}</br></td><td ${highlighter}>${subject}</td><td ${highlighter}>${teacher}</td><td ${highlighter}>${room}</td></tr>`;
             }
 
         });
@@ -82,12 +76,13 @@ $(document).ready(function () {
         return tableHtml;
     }
 
-    // Функция для загрузки расписания и отображения в модальном окне
     function loadSchedule(modalId, key) {
         $.getJSON('schedule.json', function(data) {
             if (data[key]) {
-                const scheduleHtml = generateScheduleTable(data[key]);
+                const scheduleHtml = generateDailyScheduleTable(data[key]);
                 $(modalId + ' .modal-body').html(scheduleHtml);
+            } else if (new Date().getDay() === 0) {
+                $(modalId + ' .modal-body').html('Сегодня выходной 🎉');
             } else {
                 $(modalId + ' .modal-body').html('Расписание не доступно');
             }
@@ -109,9 +104,9 @@ $(document).ready(function () {
         }
     }
 
-    // Обновленная функция для загрузки расписания на неделю с вложенными таблицами
     function loadWeekSchedule(modalId) {
         $.getJSON('schedule.json', function(data) {
+            const highlighter = 'class="today-highlight"';
             let tableContent = '<table class="table table-bordered"><thead><tr><th>День недели</th><th>Расписание</th></tr></thead><tbody>';
             const daysOfWeek = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"];
 
@@ -132,7 +127,9 @@ $(document).ready(function () {
                         }
                     });
                     miniTable += '</tbody></table>';
-                    tableContent += `<tr><td>${day}</td><td>${miniTable}</td></tr>`;
+
+                    const todayDate = formatDate(new Date()).split(',')[0];
+                    tableContent += `<tr ${day === todayDate ? highlighter : ''}><td>${day}</td><td>${miniTable}</td></tr>`;
                 } else {
                     tableContent += `<tr><td>${day}</td><td>Нет расписания</td></tr>`;
                 }
@@ -156,32 +153,51 @@ $(document).ready(function () {
         loadWeekSchedule('#weekModal');
     });
 
-    $('#nextWeekModal').on('show.bs.modal', function () {
-        const today = new Date();
-        const nextWeekStart = getNextWeekStart(today);
-        const weekStart = getWeekRange(nextWeekStart);
-        const weekKey = `${weekStart.start} - ${weekStart.end}`;
-        loadSchedule('#nextWeekModal', weekKey);
+    $('#armyModal').on('show.bs.modal', function () {
+        loadArmySchedule('#armyModal');
     });
 
-    // Получение диапазона текущей недели
-    function getWeekRange(date) {
-        const start = new Date(date);
-        start.setDate(date.getDate() - date.getDay() + 1); // Пн - начало недели
 
-        const end = new Date(start);
-        end.setDate(start.getDate() + 6); // Вс - конец недели
+    function loadArmySchedule(modalId) {
+        $.getJSON('army-schedule.json', function(data) {
+            let tableContent = '<table class="table table-bordered"><thead><tr><th>Дата</th><th>Время</th><th>Расписание</th></tr></thead><tbody>';
+            const highlighter = 'class="today-highlight"';
+            const armyDays = [
+                "Понедельник 07.10.2024",
+                "Суббота 12.10.2024",
+                "Понедельник 14.10.2024",
+                "Суббота 19.10.2024",
+                "Понедельник 21.10.2024",
+                "Суббота 26.10.2024",
+                "Понедельник 28.10.2024"
+            ];
 
-        return {
-            start: start.toLocaleDateString('ru-RU'),
-            end: end.toLocaleDateString('ru-RU')
-        };
-    }
+            armyDays.forEach(day => {
+                if (data[day]) {
+                    let miniTable = '<table class="table table-bordered table-sm mb-0"><tbody>';
+                    let index = 0;
+                    data[day].forEach((item) => {
+                        if (item.trim() !== "") {
+                            miniTable += `<tr>
+                                <td>${lecture_time[index] || ''}</td>
+                                <td>№${++index}</td>
+                                <td>${item}</td>
+                            </tr>`;
+                        }
+                    });
+                    miniTable += '</tbody></table>';
+                    const scheduleDate = day.split(' ')[1].split('.')[0];
+                    const todayDate = formatDate(new Date()).split(' ')[1].split('.')[0];
+                    console.log(todayDate)
 
-    // Получение начала следующей недели
-    function getNextWeekStart(date) {
-        const nextWeek = new Date(date);
-        nextWeek.setDate(date.getDate() + 7 - date.getDay() + 1); // Пн следующей недели
-        return nextWeek;
+                    tableContent += `<tr ${scheduleDate === todayDate ? highlighter : ''}><td>${day}</td><td colspan="2">${miniTable}</td></tr>`;
+                } else {
+                    tableContent += `<tr><td>${day}</td><td colspan="2">Нет расписания</td></tr>`;
+                }
+            });
+
+            tableContent += '</tbody></table>';
+            $(modalId + ' .modal-body').html(tableContent);
+        });
     }
 });
