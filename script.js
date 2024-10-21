@@ -8,6 +8,8 @@ const lecture_time = [
     "⏩18:50<br>⏪20:20"
 ];
 
+let weekType = '-1'
+
 $(document).ready(function () {
     $('#select-state').selectize({
         sortField: 'text'
@@ -39,8 +41,15 @@ $(document).ready(function () {
         const year = date.getFullYear();
         const dayOfWeek = daysOfWeek[date.getDay()];
 
-        const weekOfMonth = Math.ceil(day / 7);
-        const weekType = (weekOfMonth % 2 === 1) ? weekTypes[0] : weekTypes[1];
+        // Начальная дата верхней недели
+        const startDate = new Date(2024, 8, 2); // 02.09.2024 (сентябрь = 8, потому что месяцы считаются с 0)
+
+        // Рассчитываем количество недель, прошедших с начала периода
+        const diffInDays = Math.floor((date - startDate) / (1000 * 60 * 60 * 24));
+        const weekIndex = Math.floor(diffInDays / 7);
+
+        // Определяем тип недели
+        weekType = weekTypes[weekIndex % 2]; // Чередование верхней и нижней недели
 
         return `${dayOfWeek}, ${String(day).padStart(2, '0')}.${String(month).padStart(2, '0')}.${year}. ${weekType} неделя`;
     }
@@ -63,7 +72,7 @@ $(document).ready(function () {
                 highlighter = 'class="lecture-highlight"'
             }
 
-            let current_week_type = (Math.ceil( new Date().getDate() / 7) % 2 === 1) ? "В/Н" : "Н/Н"
+            let current_week_type = (weekType.charAt(0).toLowerCase() === 'в') ? "В/Н" : "Н/Н"
 
             if (subject_line[subject_line.length - 1].includes("Н/Н") || subject_line[subject_line.length - 1].includes("В/Н") && subject_line[subject_line.length - 1] !== current_week_type) {
                 tableHtml += `<tr><td>№${index + 1} <br>${lecture_time[index]}</br></td><td></td><td></td><td></td></tr>`;

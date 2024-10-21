@@ -6,75 +6,7 @@
     <title>Расписание занятий</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css">
-    <style>
-        .schedule-table {
-            margin-bottom: 2rem;
-        }
-
-        .schedule-table th, .schedule-table td {
-            text-align: center;
-            vertical-align: top;
-        }
-
-        .lecture-highlight {
-            background-color: rgba(216, 240, 240, 0.5);
-        }
-
-        .online-highlight {
-            background-color: rgba(223, 240, 216, 0.5);
-        }
-
-        .today-highlight {
-            background-color: rgba(236, 224, 178, 0.2);
-        }
-
-        table td {
-            text-align: center;
-            vertical-align: middle;
-        }
-
-        .table-responsive {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        @media (max-width: 768px) {
-            table {
-                font-size: 12px; /* Уменьшение шрифта на небольших экранах */
-            }
-        }
-
-        @media (max-width: 480px) {
-            table, thead, tbody, th, td, tr {
-                display: block; /* Блочный формат для очень маленьких экранов */
-            }
-
-            tr {
-                margin-bottom: 15px; /* Добавляем отступы между строками */
-            }
-
-            td {
-                text-align: right;
-                padding-left: 50%;
-                position: relative;
-            }
-
-            td:before {
-                content: attr(data-label); /* Используем атрибут для заголовков столбцов */
-                position: absolute;
-                left: 10px;
-                width: 45%;
-                padding-right: 10px;
-                white-space: nowrap;
-                text-align: left;
-                font-weight: bold;
-            }
-        }
-
-        body {
-            background-color: #f0f0f0;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <div class="container pt-5 gx-4">
@@ -83,7 +15,7 @@
 
     <form action="" method="post" class="pb-5">
         <input type="hidden" name="group_last" value="">
-        <select id="select-state" name="group" class="form-select-lg mb-5 ps-0 selectized" aria-label=".form-select-lg" style="font-size: 2rem;">
+        <select id="select-state" name="group" class="form-select-lg mb-5 ps-0 selectized" aria-label=".form-select-lg">
             <!-- Options will be populated here -->
         </select>
 
@@ -119,7 +51,6 @@
                     </button>
                 </div>
                 <div class="modal-body table-responsive">
-                    <!-- Schedule content will be displayed here -->
                     <div id="todaySchedule" class="schedule-table">
                         <!-- Пример расписания. Оно будет заменяться динамически -->
                     </div>
@@ -138,7 +69,6 @@
                     </button>
                 </div>
                 <div class="modal-body table-responsive">
-                    <!-- Schedule content will be displayed here -->
                     <div id="nextDaySchedule" class="schedule-table">
                         <!-- Пример расписания. Оно будет заменяться динамически -->
                     </div>
@@ -157,7 +87,6 @@
                     </button>
                 </div>
                 <div class="modal-body table-responsive">
-                    <!-- Schedule content will be displayed here -->
                     <div id="weekSchedule" class="schedule-table">
                         <!-- Пример расписания. Оно будет заменяться динамически -->
                     </div>
@@ -176,7 +105,6 @@
                     </button>
                 </div>
                 <div class="modal-body table-responsive">
-                    <!-- Schedule content will be displayed here -->
                     <div id="armySchedule" class="schedule-table">
                         <!-- Пример расписания. Оно будет заменяться динамически -->
                     </div>
