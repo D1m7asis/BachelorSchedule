@@ -171,17 +171,8 @@ $(document).ready(function () {
         $.getJSON('army-schedule.json', function(data) {
             let tableContent = '<table class="table table-bordered"><thead><tr><th>Дата</th><th>Время</th><th>Расписание</th></tr></thead><tbody>';
             const highlighter = 'class="today-highlight"';
-            const armyDays = [
-                "Понедельник 07.10.2024",
-                "Суббота 12.10.2024",
-                "Понедельник 14.10.2024",
-                "Суббота 19.10.2024",
-                "Понедельник 21.10.2024",
-                "Суббота 26.10.2024",
-                "Понедельник 28.10.2024"
-            ];
 
-            armyDays.forEach(day => {
+            Object.keys(data).forEach(day => {
                 if (data[day]) {
                     let miniTable = '<table class="table table-bordered table-sm mb-0"><tbody>';
                     let index = 0;
