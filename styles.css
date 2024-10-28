@@ -29,7 +29,7 @@ table td {
     -webkit-overflow-scrolling: touch;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1000px) {
     table {
         font-size: 12px; /* Уменьшение шрифта на небольших экранах */
     }
@@ -64,4 +64,11 @@ table td {
 
 body {
     background-color: #f0f0f0;
+}
+
+.centered-image {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    height: auto;
 }

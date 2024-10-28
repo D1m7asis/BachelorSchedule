@@ -19,8 +19,6 @@ $(document).ready(function () {
         const select = $('#select-state')[0].selectize;
         select.clearOptions(); // Очистить существующие опции
         select.addOption({ value: '5', text: '5 подгруппа' });
-        select.addOption({ value: '6', text: '6 подгруппа (пока недоступна)' });
-
         select.setValue('5', false);
     });
 
@@ -67,16 +65,21 @@ $(document).ready(function () {
 
             let highlighter  = '';
             if (item.toLowerCase().includes('онлайн')) {
-                highlighter = 'class="online-highlight"'
+                highlighter = 'class="online-highlight"';
             } else if (item.toLowerCase().includes('лекция')) {
-                highlighter = 'class="lecture-highlight"'
+                highlighter = 'class="lecture-highlight"';
             }
 
-            let current_week_type = (weekType.charAt(0).toLowerCase() === 'в') ? "В/Н" : "Н/Н"
+            let current_week_type = (weekType.charAt(0).toLowerCase() === 'в') ? "В/Н" : "Н/Н";
 
+            // Проверка на соответствие недели и пустые значения
             if (subject_line[subject_line.length - 1].includes("Н/Н") || subject_line[subject_line.length - 1].includes("В/Н") && subject_line[subject_line.length - 1] !== current_week_type) {
-                tableHtml += `<tr><td>№${index + 1} <br>${lecture_time[index]}</br></td><td></td><td></td><td></td></tr>`;
-            }  else {
+                tableHtml += `<tr><td>№${index + 1} <br>${lecture_time[index]}</br></td><td colspan="3">&nbsp;</td></tr>`;
+            } else if (subject === '&nbsp' && teacher === '&nbsp' && room === '&nbsp') {
+                // Если все три ячейки пустые, объединяем их в одну
+                tableHtml += `<tr><td ${highlighter}>№${index + 1} <br>${lecture_time[index]}</br></td><td colspan="3" ${highlighter}>&nbsp;</td></tr>`;
+            } else {
+                // Стандартный случай с заполнением всех ячеек
                 tableHtml += `<tr><td ${highlighter}>№${index + 1} <br>${lecture_time[index]}</br></td><td ${highlighter}>${subject}</td><td ${highlighter}>${teacher}</td><td ${highlighter}>${room}</td></tr>`;
             }
 
@@ -162,12 +165,23 @@ $(document).ready(function () {
         loadWeekSchedule('#weekModal');
     });
 
-    $('#armyModal').on('show.bs.modal', function () {
-        loadArmySchedule('#armyModal');
+    $('#customModal').on('show.bs.modal', function () {
+        showCustomImage('#customModal', 'weeks.jpg');
+        //loadCustomSchedule('#customModal');
     });
 
+    function showCustomImage(modalId, imageSrc) {
+        const modal = $(modalId);
+        const imgElement = $('<img>', {
+            src: imageSrc,
+            alt: 'Custom Schedule',
+            class: 'centered-image'
+        });
 
-    function loadArmySchedule(modalId) {
+        modal.find('.modal-body').empty().append(imgElement);
+    }
+
+    function loadCustomSchedule(modalId) {
         $.getJSON('army-schedule.json', function(data) {
             let tableContent = '<table class="table table-bordered"><thead><tr><th>Дата</th><th>Время</th><th>Расписание</th></tr></thead><tbody>';
             const highlighter = 'class="today-highlight"';
