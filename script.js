@@ -71,18 +71,16 @@ $(document).ready(function () {
             }
 
             let current_week_type = (weekType.charAt(0).toLowerCase() === 'в') ? "В/Н" : "Н/Н";
+            let lineIsEmpty = subject === '&nbsp' && teacher === '&nbsp' && room === '&nbsp';
+            let subjectIsRare = subject_line[subject_line.length - 1].includes("Н/Н") || subject_line[subject_line.length - 1].includes("В/Н")
+            let rareSubjectIsOnThisWeek = subject_line[subject_line.length - 1] === current_week_type
 
-            // Проверка на соответствие недели и пустые значения
-            if (subject_line[subject_line.length - 1].includes("Н/Н") || subject_line[subject_line.length - 1].includes("В/Н") && subject_line[subject_line.length - 1] !== current_week_type) {
+
+            if (lineIsEmpty) {
                 tableHtml += `<tr><td>№${index + 1} <br>${lecture_time[index]}</br></td><td colspan="3">&nbsp;</td></tr>`;
-            } else if (subject === '&nbsp' && teacher === '&nbsp' && room === '&nbsp') {
-                // Если все три ячейки пустые, объединяем их в одну
-                tableHtml += `<tr><td ${highlighter}>№${index + 1} <br>${lecture_time[index]}</br></td><td colspan="3" ${highlighter}>&nbsp;</td></tr>`;
-            } else {
-                // Стандартный случай с заполнением всех ячеек
+            } else if (subjectIsRare === rareSubjectIsOnThisWeek) {
                 tableHtml += `<tr><td ${highlighter}>№${index + 1} <br>${lecture_time[index]}</br></td><td ${highlighter}>${subject}</td><td ${highlighter}>${teacher}</td><td ${highlighter}>${room}</td></tr>`;
             }
-
         });
         tableHtml += '</tbody></table>';
         return tableHtml;
