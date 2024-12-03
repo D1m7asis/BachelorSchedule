@@ -75,11 +75,12 @@ $(document).ready(function () {
             let subjectIsRare = subject_line[subject_line.length - 1].includes("Н/Н") || subject_line[subject_line.length - 1].includes("В/Н")
             let rareSubjectIsOnThisWeek = subject_line[subject_line.length - 1] === current_week_type
 
+            let subjectIsToday = subjectIsRare === rareSubjectIsOnThisWeek;
 
-            if (lineIsEmpty) {
-                tableHtml += `<tr><td>№${index + 1} <br>${lecture_time[index]}</br></td><td colspan="3">&nbsp;</td></tr>`;
-            } else if (subjectIsRare === rareSubjectIsOnThisWeek) {
+            if (subjectIsToday && !lineIsEmpty) {
                 tableHtml += `<tr><td ${highlighter}>№${index + 1} <br>${lecture_time[index]}</br></td><td ${highlighter}>${subject}</td><td ${highlighter}>${teacher}</td><td ${highlighter}>${room}</td></tr>`;
+            } else {
+                tableHtml += `<tr><td>№${index + 1} <br>${lecture_time[index]}</br></td><td colspan="3">&nbsp;</td></tr>`;
             }
         });
         tableHtml += '</tbody></table>';
@@ -164,7 +165,7 @@ $(document).ready(function () {
     });
 
     $('#customModal').on('show.bs.modal', function () {
-        showCustomImage('#customModal', 'weeks.jpg');
+        showCustomImage('#customModal', 'exams.jpg');
         //loadCustomSchedule('#customModal');
     });
 
