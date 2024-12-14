@@ -92,7 +92,7 @@ $(document).ready(function () {
             if (data[key]) {
                 const scheduleHtml = generateDailyScheduleTable(data[key]);
                 $(modalId + ' .modal-body').html(scheduleHtml);
-            } else if (new Date().getDay() === 0) {
+            } else if (key === 'Воскресенье') {
                 $(modalId + ' .modal-body').html('Сегодня выходной 🎉');
             } else {
                 $(modalId + ' .modal-body').html('Расписание не доступно');
