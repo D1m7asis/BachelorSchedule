@@ -165,9 +165,20 @@ $(document).ready(function () {
     });
 
     $('#customModal').on('show.bs.modal', function () {
-        showCustomImage('#customModal', 'exams.jpg');
+        showCustomMessage('#customModal', 'Конец сессии!');
         //loadCustomSchedule('#customModal');
     });
+
+    function showCustomMessage(modalId, content) {
+        const modal = $(modalId);
+        const textElement = $('<p>', {
+            alt: 'Custom Text',
+            class: 'centered-image',
+            text: content
+        });
+
+        modal.find('.modal-body').empty().append(textElement);
+    }
 
     function showCustomImage(modalId, imageSrc) {
         const modal = $(modalId);
