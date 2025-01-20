@@ -40,7 +40,7 @@ $(document).ready(function () {
         const dayOfWeek = daysOfWeek[date.getDay()];
 
         // Начальная дата верхней недели
-        const startDate = new Date(2024, 8, 2); // 02.09.2024 (сентябрь = 8, потому что месяцы считаются с 0)
+        const startDate = new Date(2024, 1, 13); // 02.09.2024 (сентябрь = 8, потому что месяцы считаются с 0)
 
         // Рассчитываем количество недель, прошедших с начала периода
         const diffInDays = Math.floor((date - startDate) / (1000 * 60 * 60 * 24));
@@ -165,7 +165,8 @@ $(document).ready(function () {
     });
 
     $('#customModal').on('show.bs.modal', function () {
-        showCustomMessage('#customModal', 'Конец сессии!');
+        // showCustomMessage('#customModal', 'Конец сессии!');
+        showCustomImage('#customModal', 'weeks.jpg');
         //loadCustomSchedule('#customModal');
     });
 
