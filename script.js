@@ -40,7 +40,7 @@ $(document).ready(function () {
         const dayOfWeek = daysOfWeek[date.getDay()];
 
         // Начальная дата верхней недели
-        const startDate = new Date(2024, 1, 13); // 02.09.2024 (сентябрь = 8, потому что месяцы считаются с 0)
+        const startDate = new Date(2025, 0, 20); // 02.09.2024 (сентябрь = 8, потому что месяцы считаются с 0)
 
         // Рассчитываем количество недель, прошедших с начала периода
         const diffInDays = Math.floor((date - startDate) / (1000 * 60 * 60 * 24));
