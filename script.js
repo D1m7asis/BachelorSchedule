@@ -29,6 +29,51 @@ $(document).ready(function () {
         $('#today-date').text('Сегодня: ' + dateInfo);
     }
 
+function updateCurrentClassInfo() {
+    const now = new Date();
+    const currentDay = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"][now.getDay()];
+    const currentTime = (now.getHours()-2) * 60 + now.getMinutes(); // Текущее время в минутах
+
+    // Время начала и окончания пар в минутах
+    const classTimes = lecture_time.map(time => {
+        const times = time.split('<br>');
+        const start = times[0].split('⏩')[1].split(':');
+        const end = times[1].split('⏪')[1].split(':');
+        return {
+            start: parseInt(start[0]) * 60 + parseInt(start[1]),
+            end: parseInt(end[0]) * 60 + parseInt(end[1])
+        };
+    });
+
+    let currentClass = null;
+    let timeLeft = 0;
+
+    // Проверяем, какая пара сейчас идет
+    for (let i = 0; i < classTimes.length; i++) {
+        if (currentTime >= classTimes[i].start && currentTime < classTimes[i].end) {
+            currentClass = i + 1; // Номер пары (1-based)
+            timeLeft = classTimes[i].end - currentTime;
+            break;
+        }
+    }
+
+    // Загружаем расписание и находим название текущей пары
+    $.getJSON('schedule.json', function(data) {
+        if (data[currentDay] && currentClass !== null) {
+            const scheduleItem = data[currentDay][currentClass - 1] !== '&nbsp';
+
+            if (scheduleItem && timeLeft > 0) {
+                $('#current-class').text(`Текущая пара закончится через ${timeLeft} мин`);
+            } else {
+                $('#current-class').text('Сейчас нет пары');
+            }
+        }
+    });
+
+    // Обновляем информацию каждую минуту
+    setTimeout(updateCurrentClassInfo, 60000);
+}
+
     // Форматирование даты в формате "Вторник, 03.09.2024. Верхняя неделя"
     function formatDate(date) {
         const daysOfWeek = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
@@ -53,6 +98,7 @@ $(document).ready(function () {
     }
 
     updateDateInfo();
+    updateCurrentClassInfo();
 
     function generateDailyScheduleTable(scheduleItems) {
         let tableHtml = '<table class="table table-bordered"><thead><tr><th>#</th><th>Предмет</th><th>Препод</th><th>Кабинет</th></tr></thead><tbody>';
