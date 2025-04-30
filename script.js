@@ -15,10 +15,10 @@ $(document).ready(function () {
         sortField: 'text'
     });
 
-    $.getJSON('schedule.json', function(data) {
+    $.getJSON('schedule.json', function (data) {
         const select = $('#select-state')[0].selectize;
         select.clearOptions(); // Очистить существующие опции
-        select.addOption({ value: '5', text: '5 подгруппа' });
+        select.addOption({value: '5', text: '5 подгруппа'});
         select.setValue('5', false);
     });
 
@@ -29,50 +29,51 @@ $(document).ready(function () {
         $('#today-date').text('Сегодня: ' + dateInfo);
     }
 
-function updateCurrentClassInfo() {
-    const now = new Date();
-    const currentDay = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"][now.getDay()];
-    const currentTime = (now.getHours()-2) * 60 + now.getMinutes(); // Текущее время в минутах
+    function updateCurrentClassInfo() {
+        const now = new Date();
+        const currentDay = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"][now.getDay()];
+        const currentTime = (now.getHours() - 2) * 60 + now.getMinutes(); // Текущее время в минутах
 
-    // Время начала и окончания пар в минутах
-    const classTimes = lecture_time.map(time => {
-        const times = time.split('<br>');
-        const start = times[0].split('⏩')[1].split(':');
-        const end = times[1].split('⏪')[1].split(':');
-        return {
-            start: parseInt(start[0]) * 60 + parseInt(start[1]),
-            end: parseInt(end[0]) * 60 + parseInt(end[1])
-        };
-    });
+        // Время начала и окончания пар в минутах
+        const classTimes = lecture_time.map(time => {
+            const times = time.split('<br>');
+            const start = times[0].split('⏩')[1].split(':');
+            const end = times[1].split('⏪')[1].split(':');
+            return {
+                start: parseInt(start[0]) * 60 + parseInt(start[1]),
+                end: parseInt(end[0]) * 60 + parseInt(end[1])
+            };
+        });
 
-    let currentClass = null;
-    let timeLeft = 0;
+        let currentClass = null;
+        let timeLeft = 0;
 
-    // Проверяем, какая пара сейчас идет
-    for (let i = 0; i < classTimes.length; i++) {
-        if (currentTime >= classTimes[i].start && currentTime < classTimes[i].end) {
-            currentClass = i + 1; // Номер пары (1-based)
-            timeLeft = classTimes[i].end - currentTime;
-            break;
-        }
-    }
-
-    // Загружаем расписание и находим название текущей пары
-    $.getJSON('schedule.json', function(data) {
-        if (data[currentDay] && currentClass !== null) {
-            const scheduleItem = data[currentDay][currentClass - 1] !== '&nbsp';
-
-            if (scheduleItem && timeLeft > 0) {
-                $('#current-class').text(`Текущая пара закончится через ${timeLeft} мин`);
-            } else {
-                $('#current-class').text('Сейчас нет пары');
+        // Проверяем, какая пара сейчас идет
+        for (let i = 0; i < classTimes.length; i++) {
+            if (currentTime >= classTimes[i].start && currentTime < classTimes[i].end) {
+                currentClass = i + 1; // Номер пары (1-based)
+                timeLeft = classTimes[i].end - currentTime;
+                break;
             }
         }
-    });
 
-    // Обновляем информацию каждую минуту
-    setTimeout(updateCurrentClassInfo, 60000);
-}
+        // Загружаем расписание и находим название текущей пары
+        $.getJSON('schedule.json', function (data) {
+            if (data[currentDay] && currentClass !== null) {
+                const scheduleItem = data[currentDay][currentClass];
+                const scheduleIsNotEmpty = scheduleItem !== '&nbsp'
+
+                if (scheduleItem && scheduleIsNotEmpty && timeLeft > 0) {
+                    $('#current-class').text(`Текущая пара закончится через ${timeLeft} мин`);
+                } else {
+                    $('#current-class').text('Сейчас нет пары');
+                }
+            }
+        });
+
+        // Обновляем информацию каждую минуту
+        setTimeout(updateCurrentClassInfo, 60000);
+    }
 
     // Форматирование даты в формате "Вторник, 03.09.2024. Верхняя неделя"
     function formatDate(date) {
@@ -109,7 +110,7 @@ function updateCurrentClassInfo() {
             let teacher = subject_line[1] === undefined ? '&nbsp' : subject_line[1];
             let room = subject_line[2] === undefined ? '&nbsp' : subject_line[2];
 
-            let highlighter  = '';
+            let highlighter = '';
             if (item.toLowerCase().includes('онлайн')) {
                 highlighter = 'class="online-highlight"';
             } else if (item.toLowerCase().includes('лекция')) {
@@ -134,7 +135,7 @@ function updateCurrentClassInfo() {
     }
 
     function loadSchedule(modalId, key) {
-        $.getJSON('schedule.json', function(data) {
+        $.getJSON('schedule.json', function (data) {
             if (data[key]) {
                 const scheduleHtml = generateDailyScheduleTable(data[key]);
                 $(modalId + ' .modal-body').html(scheduleHtml);
@@ -162,7 +163,7 @@ function updateCurrentClassInfo() {
     }
 
     function loadWeekSchedule(modalId) {
-        $.getJSON('schedule.json', function(data) {
+        $.getJSON('schedule.json', function (data) {
             const highlighter = 'class="today-highlight"';
             let tableContent = '<table class="table table-bordered"><thead><tr><th>День недели</th><th>Расписание</th></tr></thead><tbody>';
             const daysOfWeek = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"];
@@ -239,7 +240,7 @@ function updateCurrentClassInfo() {
     }
 
     function loadCustomSchedule(modalId) {
-        $.getJSON('army-schedule.json', function(data) {
+        $.getJSON('army-schedule.json', function (data) {
             let tableContent = '<table class="table table-bordered"><thead><tr><th>Дата</th><th>Время</th><th>Расписание</th></tr></thead><tbody>';
             const highlighter = 'class="today-highlight"';
 
