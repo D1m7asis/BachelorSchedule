@@ -32,7 +32,7 @@ $(document).ready(function () {
     function updateCurrentClassInfo() {
         const now = new Date();
         const currentDay = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"][now.getDay()];
-        const currentTime = (now.getHours() - 2) * 60 + now.getMinutes(); // Текущее время в минутах
+        const currentTime = now.getHours() * 60 + now.getMinutes(); // Текущее время в минутах
 
         // Время начала и окончания пар в минутах
         const classTimes = lecture_time.map(time => {
