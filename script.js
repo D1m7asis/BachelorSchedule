@@ -51,7 +51,7 @@ $(document).ready(function () {
         // Проверяем, какая пара сейчас идет
         for (let i = 0; i < classTimes.length; i++) {
             if (currentTime >= classTimes[i].start && currentTime < classTimes[i].end) {
-                currentClass = i + 1; // Номер пары (1-based)
+                currentClass = i
                 timeLeft = classTimes[i].end - currentTime;
                 break;
             }
